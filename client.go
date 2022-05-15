@@ -16,7 +16,10 @@ func NewClient(conn net.Conn) *Client {
 }
 
 func (c *Client) WriteMessage(msg string) {
-
+	_, err := c.Conn.Write(encodePayload([]byte(msg)))
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
 
 func (c *Client) ReadMessages() chan []byte {

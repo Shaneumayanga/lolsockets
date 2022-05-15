@@ -26,3 +26,42 @@ func decodePayload(b []byte) []byte {
 	}
 	return nil
 }
+
+func encodePayload(b []byte) []byte {
+	rawB := b
+	frame := make([]byte, 10)
+	startIndexRawData := -1
+	len := len(rawB)
+	frame[0] = 129
+	if len <= 125 {
+		frame[1] = byte(len)
+		startIndexRawData = 2
+	} else if len >= 125 && len <= 65535 {
+		frame[1] = byte(126)
+		frame[2] = byte((len >> 8) & 255)
+		frame[3] = byte(len & 255)
+		startIndexRawData = 4
+	} else {
+		frame[1] = byte(127)
+		frame[2] = byte((len >> 56) & 255)
+		frame[3] = byte((len >> 48) & 255)
+		frame[4] = byte((len >> 40) & 255)
+		frame[5] = byte((len >> 32) & 255)
+		frame[6] = byte((len >> 25) & 255)
+		frame[7] = byte((len >> 16) & 255)
+		frame[8] = byte((len >> 8) & 255)
+		frame[9] = byte((len & 255))
+		startIndexRawData = 10
+	}
+	response := make([]byte, startIndexRawData+len)
+	reponseIndex := 0
+	for i := 0; i < startIndexRawData; i++ {
+		response[reponseIndex] = frame[i]
+		reponseIndex++
+	}
+	for i := 0; i < len; i++ {
+		response[reponseIndex] = rawB[i]
+		reponseIndex++
+	}
+	return response
+}
