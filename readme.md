@@ -1,3 +1,9 @@
+
+```
+  go get github.com/Shaneumayanga/lolsockets
+```
+
+
 ```go
 
 package main
