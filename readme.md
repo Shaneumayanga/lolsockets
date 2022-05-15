@@ -14,10 +14,14 @@ type Client struct {
 	C lolsockets.Client
 }
 
-func (c *Client) Read() {
+func (client *Client) Read() {
 	go func() {
-		for msg := range c.C.ReadMessages() {
-			fmt.Printf("msg: %v\n", msg)
+		//listen for incoming messages from the websocket connection
+		for msg := range client.C.ReadMessages() {
+			fmt.Printf("msg: %v\n", string(msg))
+			//send the reply
+			reply := fmt.Sprintf("Hello you said %s !", string(msg))
+			client.C.WriteMessage([]byte(reply))
 		}
 	}()
 }
@@ -30,8 +34,10 @@ func main() {
 		}
 		c.Read()
 	})
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
 
 
 ```
