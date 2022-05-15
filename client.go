@@ -15,8 +15,8 @@ func NewClient(conn net.Conn) *Client {
 	}
 }
 
-func (c *Client) WriteMessage(msg string) {
-	_, err := c.Conn.Write(encodePayload([]byte(msg)))
+func (c *Client) WriteMessage(msg []byte) {
+	_, err := c.Conn.Write(encodePayload(msg))
 	if err != nil {
 		log.Println(err.Error())
 	}
