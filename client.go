@@ -2,6 +2,7 @@ package lolsockets
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"sync"
 )
@@ -25,6 +26,7 @@ func (c *Client) ReadMessages() chan string {
 	msg := make(chan string)
 	wg.Add(1)
 	go func(ch chan string) {
+		log.Println("lol")
 		defer wg.Done()
 		for {
 			b := make([]byte, 2048)
