@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"sync"
 )
 
 type Client struct {
@@ -22,12 +21,9 @@ func (c *Client) WriteMessage(msg string) {
 }
 
 func (c *Client) ReadMessages() chan string {
-	wg := &sync.WaitGroup{}
 	msg := make(chan string)
-	wg.Add(1)
 	go func(ch chan string) {
 		log.Println("lol")
-		defer wg.Done()
 		for {
 			b := make([]byte, 2048)
 			_, err := c.Conn.Read(b)
@@ -62,6 +58,5 @@ func (c *Client) ReadMessages() chan string {
 			}
 		}
 	}(msg)
-	wg.Wait()
 	return msg
 }
