@@ -29,7 +29,7 @@ func (c *Client) ReadMessages() chan []byte {
 			b := make([]byte, 2048)
 			_, err := c.Conn.Read(b)
 			if err != nil {
-				panic(err)
+				log.Println(err.Error())
 			}
 			decodedData := decodePayload(b)
 			if decodedData == nil {
