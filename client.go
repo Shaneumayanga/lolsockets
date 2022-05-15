@@ -1,8 +1,6 @@
 package lolsockets
 
 import (
-	"fmt"
-	"log"
 	"net"
 )
 
@@ -23,7 +21,6 @@ func (c *Client) WriteMessage(msg string) {
 func (c *Client) ReadMessages() chan string {
 	msg := make(chan string)
 	go func(ch chan string) {
-		log.Println("lol")
 		for {
 			b := make([]byte, 2048)
 			_, err := c.Conn.Read(b)
@@ -44,7 +41,6 @@ func (c *Client) ReadMessages() chan string {
 					decoded[i] = b[realPos] ^ key[i%4]
 				}
 				ch <- string(decoded)
-				fmt.Printf("decoded: %v\n", string(decoded))
 			} else if length > 125 {
 				len := uint16(b[2]) + uint16(b[3])
 				key := []byte{b[4], b[5], b[6], b[7]}
@@ -54,7 +50,6 @@ func (c *Client) ReadMessages() chan string {
 					decoded[i] = b[realPos] ^ key[i%4]
 				}
 				ch <- string(decoded)
-				fmt.Printf("decoded: %v\n", string(decoded))
 			}
 		}
 	}(msg)
