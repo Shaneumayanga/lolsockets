@@ -27,7 +27,10 @@ func (client *Client) Read() {
 			fmt.Printf("msg: %v\n", string(msg))
 			//send the reply
 			reply := fmt.Sprintf("Hello you said %s !", string(msg))
-			client.C.WriteMessage([]byte(reply))
+			if err := client.C.WriteMessage([]byte(reply)); err != nil {
+				log.Println(err.Error())
+				return
+			}
 		}
 	}()
 }
@@ -41,6 +44,7 @@ func main() {
 		c.Read()
 	})
 
+	log.Println("Server running on port :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
