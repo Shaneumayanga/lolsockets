@@ -25,8 +25,8 @@ func (c *Client) WriteMessage(msg []byte) {
 func (c *Client) ReadMessages() chan []byte {
 	msg := make(chan []byte)
 	go func(ch chan []byte) {
+		b := make([]byte, 2048)
 		for {
-			b := make([]byte, 2048)
 			_, err := c.Conn.Read(b)
 			if err != nil {
 				log.Println(err.Error())
