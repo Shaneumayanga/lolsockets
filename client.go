@@ -28,8 +28,7 @@ func (c *Client) ReadMessages() chan []byte {
 			_, err := c.Conn.Read(b)
 			if err != nil {
 				log.Println(err.Error())
-				//break out of the loop on error??
-				//return
+				return
 			}
 			decodedData := decodePayload(b)
 			if decodedData == nil {
