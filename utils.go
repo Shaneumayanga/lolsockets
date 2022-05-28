@@ -25,8 +25,8 @@ func isValidChallengeKey(s string) bool {
 func isEmpty(str ...string) bool {
 	for _, val := range str {
 		if val == "" {
-			return false
+			return true
 		}
 	}
-	return true
+	return false
 }
