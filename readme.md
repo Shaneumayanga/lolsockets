@@ -54,7 +54,7 @@ func main() {
 ## An example client
 
 ```go
-	package main
+package main
 
 import (
 	"fmt"
