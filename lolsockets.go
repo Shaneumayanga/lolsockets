@@ -33,7 +33,7 @@ func Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
 		"Connection: Upgrade\r\n" +
 		"Sec-WebSocket-Accept: " + computeAcceptKey(challengeKey) + "\r\n" + "\r\n"))
 	if err != nil {
-		log.Println(err.Error())
+		return nil, err
 	}
 	log.Println("Websocket handshake completed")
 	client := NewClient(conn)
