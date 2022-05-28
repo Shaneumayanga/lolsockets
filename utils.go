@@ -21,3 +21,12 @@ func isValidChallengeKey(s string) bool {
 	decoded, err := base64.StdEncoding.DecodeString(s)
 	return err == nil && len(decoded) == 16
 }
+
+func isEmpty(str ...string) bool {
+	for _, val := range str {
+		if val == "" {
+			return false
+		}
+	}
+	return true
+}

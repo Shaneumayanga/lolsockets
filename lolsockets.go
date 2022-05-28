@@ -1,28 +1,32 @@
 package lolsockets
 
 import (
+	"errors"
 	"log"
 	"net/http"
 )
 
-func Upgrade(rw http.ResponseWriter, r *http.Request) *Client {
+func Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
 	if r.Method != http.MethodGet {
 		rw.WriteHeader(http.StatusBadRequest)
 		rw.Write([]byte("Bad request"))
-		return nil
+		return nil, errors.New("bad request")
 	}
 	challengeKey := r.Header.Get("Sec-Websocket-Key")
-	if !isValidChallengeKey(challengeKey) {
-		log.Fatal("Challenge key is not valid")
+
+	if isEmpty(challengeKey) {
+		return nil, errors.New("challenge key is empty")
 	}
 
-	log.Println(challengeKey)
+	if !isValidChallengeKey(challengeKey) {
+		return nil, errors.New("invalid challenge key")
+	}
 
 	h := rw.(http.Hijacker)
 
 	conn, _, err := h.Hijack()
 	if err != nil {
-		log.Println(err.Error())
+		return nil, err
 	}
 	_, err = conn.Write([]byte("HTTP/1.1 101 Switching Protocols\r\n" +
 		"Upgrade: websocket\r\n" +
@@ -33,5 +37,5 @@ func Upgrade(rw http.ResponseWriter, r *http.Request) *Client {
 	}
 	log.Println("Websocket handshake completed")
 	client := NewClient(conn)
-	return client
+	return client, nil
 }
