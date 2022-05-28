@@ -17,7 +17,7 @@ import (
 )
 
 type Client struct {
-	C lolsockets.Client
+	C *lolsockets.Client
 }
 
 func (client *Client) Read() {
@@ -39,7 +39,7 @@ func main() {
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
 		client := lolsockets.Upgrade(rw, r)
 		c := Client{
-			C: *client,
+			C: client,
 		}
 		c.Read()
 	})
