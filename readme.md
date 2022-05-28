@@ -4,6 +4,7 @@
 ```
 
 
+
 ```go
 
 package main
@@ -48,6 +49,66 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+```
 
+## An example client
+
+```go
+	package main
+
+import (
+	"fmt"
+	"net/url"
+	"sync"
+	"time"
+
+	"github.com/gorilla/websocket"
+)
+
+var addr = "localhost:8080"
+
+func main() {
+
+	wg := &sync.WaitGroup{}
+	u := url.URL{
+		Scheme: "ws",
+		Host:   addr,
+		Path:   "/ws",
+	}
+
+	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+
+	if err != nil {
+		panic(err)
+	}
+	defer c.Close()
+
+	ticker := time.NewTicker(time.Second)
+
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		for {
+			<-ticker.C
+			err := c.WriteMessage(websocket.TextMessage, []byte("Hemlooo"))
+			if err != nil {
+				return
+			}
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for {
+			_, message, err := c.ReadMessage()
+			if err != nil {
+				return
+			}
+			fmt.Println(string(message))
+		}
+	}()
+	wg.Wait()
+}
 
 ```
+
