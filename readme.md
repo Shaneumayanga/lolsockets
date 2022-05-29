@@ -39,7 +39,10 @@ func (client *Client) Read() {
 
 func main() {
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
-		client := lolsockets.Upgrade(rw, r)
+		client , err := lolsockets.Upgrade(rw, r)
+		if err!=nil{
+			panic(err)
+		}
 		c := Client{
 			C: client,
 		}
