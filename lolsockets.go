@@ -2,14 +2,13 @@ package lolsockets
 
 import (
 	"errors"
-	"log"
 	"net/http"
 )
 
-func Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
-	if !CheckOrigin(r) {
-		return nil, errors.New("origin now allowed")
-	}
+func (u *Upgrader) Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
+	// if !CheckOrigin(r) {
+	// 	return nil, errors.New("origin now allowed")
+	// }
 	if r.Method != http.MethodGet {
 		rw.WriteHeader(http.StatusBadRequest)
 		rw.Write([]byte("Bad request"))
@@ -38,7 +37,9 @@ func Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Websocket handshake completed")
-	client := NewClient(conn)
+	client := &Client{
+		Conn:           conn,
+		ReadBufferSize: u.ReadBufferSize,
+	}
 	return client, nil
 }

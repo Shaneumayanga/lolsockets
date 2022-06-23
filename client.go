@@ -10,13 +10,6 @@ type Client struct {
 	ReadBufferSize int
 }
 
-func NewClient(conn net.Conn) *Client {
-	return &Client{
-		Conn:           conn,
-		ReadBufferSize: 1024,
-	}
-}
-
 func (c *Client) WriteMessage(msg []byte) error {
 	_, err := c.Conn.Write(encodePayload(msg))
 	return err
