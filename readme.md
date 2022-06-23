@@ -40,6 +40,8 @@ func (client *Client) Read() {
 func main() {
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
 		client , err := lolsockets.Upgrade(rw, r)
+		//default 1024
+		//client.ReadBufferSize = 1024
 		if err!=nil{
 			panic(err)
 		}
