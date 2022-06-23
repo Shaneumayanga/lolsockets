@@ -6,12 +6,14 @@ import (
 )
 
 type Client struct {
-	Conn net.Conn
+	Conn           net.Conn
+	ReadBufferSize int
 }
 
 func NewClient(conn net.Conn) *Client {
 	return &Client{
-		Conn: conn,
+		Conn:           conn,
+		ReadBufferSize: 1024,
 	}
 }
 
@@ -23,7 +25,7 @@ func (c *Client) WriteMessage(msg []byte) error {
 func (c *Client) ReadMessages() chan []byte {
 	msg := make(chan []byte)
 	go func(ch chan []byte) {
-		b := make([]byte, 2048)
+		b := make([]byte, c.ReadBufferSize)
 		for {
 			_, err := c.Conn.Read(b)
 			if err != nil {
