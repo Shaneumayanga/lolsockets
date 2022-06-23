@@ -37,12 +37,17 @@ func (client *Client) Read() {
 	}()
 }
 
+var upgrader = &lolsockets.Upgrader{
+	ReadBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
 func main() {
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
-		client , err := lolsockets.Upgrade(rw, r)
-		//default 1024
-		//client.ReadBufferSize = 1024
-		if err!=nil{
+		client, err := upgrader.Upgrade(rw, r)
+		if err != nil {
 			panic(err)
 		}
 		c := Client{
@@ -54,6 +59,7 @@ func main() {
 	log.Println("Server running on port :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
 
 ```
 
