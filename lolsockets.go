@@ -7,6 +7,9 @@ import (
 )
 
 func Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, error) {
+	if !CheckOrigin(r) {
+		return nil, errors.New("origin now allowed")
+	}
 	if r.Method != http.MethodGet {
 		rw.WriteHeader(http.StatusBadRequest)
 		rw.Write([]byte("Bad request"))
