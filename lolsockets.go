@@ -31,11 +31,7 @@ func (u *Upgrader) Upgrade(rw http.ResponseWriter, r *http.Request) (*Client, er
 	if err != nil {
 		return nil, err
 	}
-	_, err = conn.Write([]byte("HTTP/1.1 101 Switching Protocols\r\n" +
-		"Upgrade: websocket\r\n" +
-		"Connection: Upgrade\r\n" +
-		"Sec-WebSocket-Accept: " + computeAcceptKey(challengeKey) + "\r\n" + "\r\n"))
-	if err != nil {
+	if err = u.upgradeToWs(conn, challengeKey); err != nil {
 		return nil, err
 	}
 	client := &Client{
